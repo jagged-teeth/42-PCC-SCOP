@@ -6,6 +6,7 @@
 #include <iostream>
 #include <map>
 #include <optional>
+#include <set>
 #include <stdexcept>
 #include <vector>
 
@@ -41,9 +42,19 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance,
 		func(instance, debugMessenger, pAllocator);
 }
 
+/*The QueueFamilyIndices struct has a member variable
+graphicsFamily of type std::optional<uint32_t>, which represents an optional
+value of type uint32_t. The struct also has a member function isComplete(),
+which returns a boolean value. It checks if graphicsFamily has a value using the
+has_value() function of std::optional. If graphicsFamily has a value,
+isComplete() returns true; otherwise, it returns false. */
 struct QueueFamilyIndices {
 	std::optional<uint32_t> graphicsFamily;
-	bool isComplete() { return graphicsFamily.has_value(); }
+	std::optional<uint32_t> presentFamily;
+
+	bool isComplete() {
+		return graphicsFamily.has_value() && presentFamily.has_value();
+	}
 };
 
 class HelloTriangleApplication {
@@ -59,7 +70,11 @@ class HelloTriangleApplication {
 	GLFWwindow *window;
 	VkInstance instance;
 	VkDebugUtilsMessengerEXT debugMessenger;
+	VkDevice device;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+	VkSurfaceKHR surface;
+	VkQueue graphicsQueue;
+	VkQueue presentQueue;
 
 	void initWindow() {
 		glfwInit();
@@ -73,7 +88,9 @@ class HelloTriangleApplication {
 	void initVulkan() {
 		createInstance();
 		setupDebugMessenger();
+		createSurface();
 		pickPhysicalDevice();
+		createLogicalDevice();
 	}
 
 	void mainLoop() {
@@ -85,7 +102,9 @@ class HelloTriangleApplication {
 	void cleanup() {
 		if (enableValidationLayers)
 			DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
+		vkDestroySurfaceKHR(instance, surface, nullptr);
 		vkDestroyInstance(instance, nullptr);
+		vkDestroyDevice(device, nullptr);
 		glfwDestroyWindow(window);
 		glfwTerminate();
 	}
@@ -236,6 +255,57 @@ class HelloTriangleApplication {
 	}
 	*/
 
+	void createSurface() {
+		if (glfwCreateWindowSurface(instance, window, nullptr, &surface) !=
+			VK_SUCCESS)
+			throw std::runtime_error("Failed to create window surface!");
+	}
+
+	void createLogicalDevice() {
+		QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+
+		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+		std::set<uint32_t> uniqueQueueFamilies = {
+			indices.graphicsFamily.value(), indices.presentFamily.value()};
+
+		float queuePriority = 1.0f;
+		for (uint32_t queueFamily : uniqueQueueFamilies) {
+			VkDeviceQueueCreateInfo queueCreateInfo{};
+			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+			queueCreateInfo.queueFamilyIndex = queueFamily;
+			queueCreateInfo.queueCount = 1;
+			queueCreateInfo.pQueuePriorities = &queuePriority;
+			queueCreateInfos.push_back(queueCreateInfo);
+		}
+
+		VkPhysicalDeviceFeatures deviceFeatures{};
+		VkDeviceCreateInfo createInfo{};
+
+		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+		createInfo.queueCreateInfoCount =
+			static_cast<uint32_t>(queueCreateInfos.size());
+		createInfo.pQueueCreateInfos = queueCreateInfos.data();
+		createInfo.pEnabledFeatures = &deviceFeatures;
+		createInfo.enabledExtensionCount = 0;
+
+		if (enableValidationLayers) {
+			createInfo.enabledLayerCount =
+				static_cast<uint32_t>(validationLayers.size());
+			createInfo.ppEnabledLayerNames = validationLayers.data();
+		} else {
+			createInfo.enabledLayerCount = 0;
+		}
+		if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) !=
+			VK_SUCCESS) {
+			throw std::runtime_error("failed to create logical device!");
+		}
+
+		vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0,
+						 &graphicsQueue);
+		vkGetDeviceQueue(device, indices.presentFamily.value(), 0,
+						 &presentQueue);
+	}
+
 	bool isDeviceSuitable(VkPhysicalDevice device) {
 		QueueFamilyIndices indices = findQueueFamilies(device);
 		return indices.isComplete();
@@ -260,6 +330,12 @@ class HelloTriangleApplication {
 				break;
 			i++;
 		}
+
+		VkBool32 presentSupport = false;
+		vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface,
+											 &presentSupport);
+		if (presentSupport)
+			indices.presentFamily = i;
 
 		return indices;
 	}
