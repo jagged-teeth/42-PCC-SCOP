@@ -1,59 +1,44 @@
-define compiling
-	@mkdir -p $(dir $2)
-	@printf '$(shell tput setaf 69)Compiling$(shell tput sgr0) %s\n' $1
-	@$(CC) $(CFLAGS) -c $1 -o $2
-endef
+CC = g++
+CFLAGS = -std=c++17 -Iincludes/ -O2 -g -DNDEBUG
+LDFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
-define removing
-	@printf '$(shell tput setaf 59)Removing$(shell tput sgr0) %s\n' $1
-	@$(RM) $1 > /dev/null
-endef
+SRCS = $(wildcard srcs/*.cpp)
+OBJS = $(patsubst srcs/%.cpp, obj/%.o, $(SRCS))
 
-SRCS =	srcs/device_and_queues.cpp \
-		srcs/routine.cpp \
-		srcs/validation_layers.cpp \
-		srcs/swapchain.cpp \
-		srcs/image_views.cpp \
-		srcs/graphics_pipeline.cpp \
-		srcs/command_pool.cpp \
-		srcs/framebuffer.cpp \
-		srcs/render.cpp \
-		srcs/main.cpp
-
-OBJDIR   := obj
-OBJS = $(SRCS:%.cpp=$(OBJDIR)/%.o)
-
-INCS =	includes/hellotriangle.hpp \
-		includes/utils.hpp
+INCS = $(wildcard includes/*.hpp)
 
 NAME = VulkanTest
 
-RM = rm -f
+OBJDIR = obj
 
-CC = g++
+COLOR_RESET = \033[0m
+COLOR_COMPILE = \033[1;34m
+COLOR_LINK = \033[1;32m
+COLOR_REMOVE = \033[1;31m
 
-CFLAGS = -std=c++17 -Iincludes/ -O2 -g
+$(OBJDIR)/%.o: srcs/%.cpp
+	@mkdir -p $(dir $@)
+	@printf '$(COLOR_COMPILE)Compiling$(COLOR_RESET) %s\n' $<
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-LDFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
-
-$(OBJDIR)/%.o : %.cpp
-	$(call compiling,$<,$(OBJDIR)/$*.o)
-
-${NAME}: $(OBJS) $(INCS)
-	@printf '$(shell tput setaf 29)Finished Compiling √ %s\n$(shell tput sgr0)' $1
-	@printf '$(shell tput setaf 69)Linking objs...\n$(shell tput sgr0)'
-	$(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
-	@printf '$(shell tput setaf 29)Finished linking √ %s\n$(shell tput sgr0)' $1
+$(NAME): $(OBJS) $(INCS)
+	@printf '$(COLOR_LINK)Linking objs...$(COLOR_RESET)\n'
+	@$(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
+	@printf '$(COLOR_LINK)Finished linking √$(COLOR_RESET)\n'
 
 all: $(NAME)
 
+debug: CFLAGS := $(filter-out -DNDEBUG,$(CFLAGS))
+debug: all
+
 clean:
-	$(call removing,$(OBJS))
+	@printf '$(COLOR_REMOVE)Removing$(COLOR_RESET) %s\n' $(OBJDIR)
+	@$(RM) -r $(OBJDIR)
 
 fclean: clean
-	$(RM) $(NAME)
-	$(RM) -r $(OBJDIR)
+	@printf '$(COLOR_REMOVE)Removing$(COLOR_RESET) %s\n' $(NAME)
+	@$(RM) $(NAME)
 
 re: fclean all
 
-.PHONY: all re clean fclean
+.PHONY: all debug clean fclean re
