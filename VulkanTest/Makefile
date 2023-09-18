@@ -15,6 +15,8 @@ SRCS =	srcs/device_and_queues.cpp \
 		srcs/swapchain.cpp \
 		srcs/image_views.cpp \
 		srcs/graphics_pipeline.cpp \
+		srcs/command_pool.cpp \
+		srcs/framebuffer.cpp \
 		srcs/render.cpp \
 		srcs/main.cpp
 

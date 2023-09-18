@@ -34,10 +34,17 @@ private:
 	VkRenderPass renderPass;
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
+	std::vector<VkFramebuffer> swapChainFramebuffers;
+	VkCommandPool commandPool;
+	VkCommandBuffer commandBuffer;
+	VkSemaphore imageAvailableSemaphore;
+	VkSemaphore renderFinishedSemaphore;
+	VkFence inFlightFence;
 
 	void initWindow();
 	void initVulkan();
 	void mainLoop();
+	void drawFrame();
 	void cleanup();
 
 	void createInstance();
@@ -63,6 +70,13 @@ private:
 	void createImageViews();
 	void createRenderPass();
 	void createGraphicsPipeline();
+	void createFramebuffers();
+	void createCommandPool();
+	void createCommandBuffer();
+	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
+	void createSyncObjects();
+
 	VkShaderModule createShaderModule(const std::vector<char> &node);
 
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
