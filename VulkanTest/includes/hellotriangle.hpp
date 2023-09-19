@@ -16,6 +16,7 @@ public:
 		mainLoop();
 		cleanup();
 	}
+	void setFramebufferResized(bool resized) { framebufferResized = resized; };
 
 private:
 	GLFWwindow *window;
@@ -27,19 +28,22 @@ private:
 	VkQueue graphicsQueue;
 	VkQueue presentQueue;
 	VkSwapchainKHR swapChain;
-	std::vector<VkImage> swapChainImages;
 	VkFormat swapChainImageFormat;
 	VkExtent2D swapChainExtent;
-	std::vector<VkImageView> swapChainImageViews;
 	VkRenderPass renderPass;
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
-	std::vector<VkFramebuffer> swapChainFramebuffers;
 	VkCommandPool commandPool;
-	VkCommandBuffer commandBuffer;
-	VkSemaphore imageAvailableSemaphore;
-	VkSemaphore renderFinishedSemaphore;
-	VkFence inFlightFence;
+	uint32_t currentFrame = 0;
+	bool framebufferResized = false;
+
+	std::vector<VkImage> swapChainImages;
+	std::vector<VkImageView> swapChainImageViews;
+	std::vector<VkFramebuffer> swapChainFramebuffers;
+	std::vector<VkCommandBuffer> commandBuffers;
+	std::vector<VkSemaphore> imageAvailableSemaphores;
+	std::vector<VkSemaphore> renderFinishedSemaphores;
+	std::vector<VkFence> inFlightFences;
 
 	void initWindow();
 	void initVulkan();
@@ -59,7 +63,6 @@ private:
 	void createLogicalDevice();
 
 	void createSurface();
-	void createSwapChain();
 	VkSurfaceFormatKHR
 	chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
 	VkPresentModeKHR
@@ -67,12 +70,17 @@ private:
 	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities);
 	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 
+	void createSwapChain();
+	void recreateSwapChain();
+	void cleanupSwapChain();
+
 	void createImageViews();
 	void createRenderPass();
 	void createGraphicsPipeline();
 	void createFramebuffers();
+
 	void createCommandPool();
-	void createCommandBuffer();
+	void createCommandBuffers();
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
 	void createSyncObjects();

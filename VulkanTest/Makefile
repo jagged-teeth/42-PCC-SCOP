@@ -29,7 +29,7 @@ $(NAME): $(OBJS) $(INCS)
 all: $(NAME)
 
 debug: CFLAGS := $(filter-out -DNDEBUG,$(CFLAGS))
-debug: all
+debug: clean all
 
 clean:
 	@printf '$(COLOR_REMOVE)Removing$(COLOR_RESET) %s\n' $(OBJDIR)

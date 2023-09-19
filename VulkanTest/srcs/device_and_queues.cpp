@@ -1,5 +1,10 @@
 #include "hellotriangle.hpp"
 
+void HelloTriangleApplication::createSurface() {
+	if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS)
+		throw std::runtime_error("Failed to create window surface!");
+}
+
 void HelloTriangleApplication::createInstance() {
 	if (enableValidationLayers && !checkValidationLayerSupport()) {
 		throw std::runtime_error("validation layers requested, but not available!");
