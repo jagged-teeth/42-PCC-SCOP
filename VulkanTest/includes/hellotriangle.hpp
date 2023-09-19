@@ -36,6 +36,8 @@ private:
 	VkCommandPool commandPool;
 	uint32_t currentFrame = 0;
 	bool framebufferResized = false;
+	VkBuffer vertexBuffer;
+	VkDeviceMemory vertexBufferMemory;
 
 	std::vector<VkImage> swapChainImages;
 	std::vector<VkImageView> swapChainImageViews;
@@ -84,6 +86,9 @@ private:
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
 	void createSyncObjects();
+
+	void createVertexBuffer();
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 	VkShaderModule createShaderModule(const std::vector<char> &node);
 
