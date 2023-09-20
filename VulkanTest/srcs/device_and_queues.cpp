@@ -1,5 +1,7 @@
 #include "hellotriangle.hpp"
 
+// to do : Transfer Queue (https://vulkan-tutorial.com/en/Vertex_buffers/Staging_buffer)
+
 void HelloTriangleApplication::createSurface() {
 	if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS)
 		throw std::runtime_error("Failed to create window surface!");
@@ -60,54 +62,9 @@ void HelloTriangleApplication::pickPhysicalDevice() {
 			break;
 		}
 	}
-	/*
-	// use an ordered map to automatically sort candidates by increasing
-	score std::multimap<int, VkPhysicalDevice> candidates;
-	for (const auto &device : devices) {
-			int score = rateDeviceSuitability(device);
-			candidates.insert(std::make_pair(score, device));
-	}
-
-	// check if the best candidate is suitable at all
-	if (candidates.rbegin()->first > 0) {
-			physicalDevice = candidates.rbegin()->second;
-	} else {
-			throw std::runtime_error("failed to find a suitable GPU!");
-	}
-	*/
 	if (physicalDevice == VK_NULL_HANDLE)
 		throw std::runtime_error("Failed to find a suitable GPU!");
 }
-
-/*
-int rateDeviceSuitability(VkPhysicalDevice device) {
-		int score = 0;
-
-		// discrete GPUs have a significant performance advantage
-		if (deviceProperties.deviceType ==
-VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) score += 1000;
-
-		// maximum possible size of textures affects graphics quality
-		score += deviceProperties.limits.maxImageDimension2D;
-
-		// application can't function without geometry shaders
-		if (!deviceFeatures.geometryShader)
-				return 0;
-		return score;
-}
-
-bool isDeviceSuitable(VkPhysicalDevice device) {
-		VkPhysicalDeviceProperties deviceProperties;
-		VkPhysicalDeviceFeatures deviceFeatures;
-
-		vkGetPhysicalDeviceProperties(device, &deviceProperties);
-		vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
-
-		return deviceProperties.deviceType ==
-						   VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
-				   deviceFeatures.geometryShader;
-}
-*/
 
 void HelloTriangleApplication::createLogicalDevice() {
 	QueueFamilyIndices indices = findQueueFamilies(physicalDevice);

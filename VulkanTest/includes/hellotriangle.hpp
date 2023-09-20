@@ -38,6 +38,12 @@ private:
 	bool framebufferResized = false;
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;
+	VkBuffer indexBuffer;
+	VkDeviceMemory indexBufferMemory;
+	// it is recommended to use a single buffer to store multiple buffers (like vertexBuffer) and
+	// use offsets in commands (like vkCmdBindVertexBuffers). The reason is that your data will be
+	// more cache friendly, because it's closer together in memory. This is especially important
+	// for integrated graphics cards that use shared memory.
 
 	std::vector<VkImage> swapChainImages;
 	std::vector<VkImageView> swapChainImageViews;
@@ -87,8 +93,12 @@ private:
 
 	void createSyncObjects();
 
-	void createVertexBuffer();
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties,
+					  VkBuffer &buffer, VkDeviceMemory &bufferMemory);
+	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+	void createVertexBuffer();
+	void createIndexBuffer();
 
 	VkShaderModule createShaderModule(const std::vector<char> &node);
 
