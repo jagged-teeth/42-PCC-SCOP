@@ -55,6 +55,8 @@ void HelloTriangleApplication::recordCommandBuffer(VkCommandBuffer commandBuffer
 	VkDeviceSize offsets[] = {0};
 	vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
 	vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1,
+							&descriptorSets[currentFrame], 0, nullptr);
 
 	VkViewport viewport{};
 	viewport.x = 0.0f;
