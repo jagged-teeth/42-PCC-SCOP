@@ -1,6 +1,6 @@
-#include "hellotriangle.hpp"
+#include "scop.hpp"
 
-void HelloTriangleApplication::createSwapChain() {
+void Scop::createSwapChain() {
 	SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
 	VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
 	VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
@@ -50,7 +50,7 @@ void HelloTriangleApplication::createSwapChain() {
 	swapChainExtent = extent;
 }
 
-void HelloTriangleApplication::recreateSwapChain() {
+void Scop::recreateSwapChain() {
 	int width = 0, height = 0;
 	glfwGetFramebufferSize(window, &width, &height);
 	while (width == 0 || height == 0) {
@@ -64,20 +64,27 @@ void HelloTriangleApplication::recreateSwapChain() {
 
 	createSwapChain();
 	createImageViews();
+	createDepthResources();
 	createFramebuffers();
 }
 
-void HelloTriangleApplication::cleanupSwapChain() {
+void Scop::cleanupSwapChain() {
+	vkDestroyImageView(device, depthImageView, nullptr);
+	vkDestroyImage(device, depthImage, nullptr);
+	vkFreeMemory(device, depthImageMemory, nullptr);
+
 	for (auto framebuffer : swapChainFramebuffers) {
 		vkDestroyFramebuffer(device, framebuffer, nullptr);
 	}
+
 	for (auto imageView : swapChainImageViews) {
 		vkDestroyImageView(device, imageView, nullptr);
 	}
+
 	vkDestroySwapchainKHR(device, swapChain, nullptr);
 }
 
-VkSurfaceFormatKHR HelloTriangleApplication::chooseSwapSurfaceFormat(
+VkSurfaceFormatKHR Scop::chooseSwapSurfaceFormat(
 	const std::vector<VkSurfaceFormatKHR> &availableFormats) {
 	for (const auto &availableFormat : availableFormats) {
 		if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
@@ -89,7 +96,7 @@ VkSurfaceFormatKHR HelloTriangleApplication::chooseSwapSurfaceFormat(
 	return availableFormats[0];
 }
 
-VkPresentModeKHR HelloTriangleApplication::chooseSwapPresentMode(
+VkPresentModeKHR Scop::chooseSwapPresentMode(
 	const std::vector<VkPresentModeKHR> &availablePresentModes) {
 	for (const auto &availablePresentMode : availablePresentModes) {
 		if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
@@ -101,7 +108,7 @@ VkPresentModeKHR HelloTriangleApplication::chooseSwapPresentMode(
 }
 
 VkExtent2D
-HelloTriangleApplication::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities) {
+Scop::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities) {
 	if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
 		return capabilities.currentExtent;
 	} else {
@@ -118,7 +125,7 @@ HelloTriangleApplication::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capab
 	}
 }
 
-SwapChainSupportDetails HelloTriangleApplication::querySwapChainSupport(VkPhysicalDevice device) {
+SwapChainSupportDetails Scop::querySwapChainSupport(VkPhysicalDevice device) {
 	SwapChainSupportDetails details;
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
 

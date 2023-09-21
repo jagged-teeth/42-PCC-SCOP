@@ -1,11 +1,11 @@
-#include "hellotriangle.hpp"
+#include "scop.hpp"
 
 static void framebufferResizeCallback(GLFWwindow *window, int width, int height) {
-	auto app = reinterpret_cast<HelloTriangleApplication *>(glfwGetWindowUserPointer(window));
+	auto app = reinterpret_cast<Scop *>(glfwGetWindowUserPointer(window));
 	app->setFramebufferResized(true);
 }
 
-void HelloTriangleApplication::initWindow() {
+void Scop::initWindow() {
 	glfwInit();
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -15,7 +15,7 @@ void HelloTriangleApplication::initWindow() {
 	glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 }
 
-void HelloTriangleApplication::initVulkan() {
+void Scop::initVulkan() {
 	createInstance();
 	setupDebugMessenger();
 	createSurface();
@@ -26,8 +26,9 @@ void HelloTriangleApplication::initVulkan() {
 	createRenderPass();
 	createDescriptorSetLayout();
 	createGraphicsPipeline();
-	createFramebuffers();
 	createCommandPool();
+	createDepthResources();
+	createFramebuffers();
 	createTextureImage();
 	createTextureImageView();
 	createTextureSampler();
@@ -40,7 +41,7 @@ void HelloTriangleApplication::initVulkan() {
 	createSyncObjects();
 }
 
-void HelloTriangleApplication::mainLoop() {
+void Scop::mainLoop() {
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 		drawFrame();
@@ -49,7 +50,7 @@ void HelloTriangleApplication::mainLoop() {
 	vkDeviceWaitIdle(device);
 }
 
-void HelloTriangleApplication::drawFrame() {
+void Scop::drawFrame() {
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex;
@@ -112,7 +113,7 @@ void HelloTriangleApplication::drawFrame() {
 	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
-void HelloTriangleApplication::cleanup() {
+void Scop::cleanup() {
 	cleanupSwapChain();
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
 		vkDestroyBuffer(device, uniformBuffers[i], nullptr);

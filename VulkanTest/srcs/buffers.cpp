@@ -1,6 +1,6 @@
-#include "hellotriangle.hpp"
+#include "scop.hpp"
 
-uint32_t HelloTriangleApplication::findMemoryType(uint32_t typeFilter,
+uint32_t Scop::findMemoryType(uint32_t typeFilter,
 												  VkMemoryPropertyFlags properties) {
 	VkPhysicalDeviceMemoryProperties memProperties;
 	vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
@@ -13,7 +13,7 @@ uint32_t HelloTriangleApplication::findMemoryType(uint32_t typeFilter,
 	throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void HelloTriangleApplication::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
+void Scop::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
 											VkMemoryPropertyFlags properties, VkBuffer &buffer,
 											VkDeviceMemory &bufferMemory) {
 	VkBufferCreateInfo bufferInfo{};
@@ -40,7 +40,7 @@ void HelloTriangleApplication::createBuffer(VkDeviceSize size, VkBufferUsageFlag
 	vkBindBufferMemory(device, buffer, bufferMemory, 0);
 }
 
-void HelloTriangleApplication::createIndexBuffer() {
+void Scop::createIndexBuffer() {
 	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
@@ -63,7 +63,7 @@ void HelloTriangleApplication::createIndexBuffer() {
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void HelloTriangleApplication::createVertexBuffer() {
+void Scop::createVertexBuffer() {
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
@@ -85,7 +85,28 @@ void HelloTriangleApplication::createVertexBuffer() {
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void HelloTriangleApplication::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer,
+void Scop::createFramebuffers() {
+	swapChainFramebuffers.resize(swapChainImageViews.size());
+
+	for (size_t i = 0; i < swapChainImageViews.size(); i++) {
+		std::array<VkImageView, 2> attachments = {swapChainImageViews[i], depthImageView};
+
+		VkFramebufferCreateInfo framebufferInfo{};
+		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+		framebufferInfo.renderPass = renderPass;
+		framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
+		framebufferInfo.pAttachments = attachments.data();
+		framebufferInfo.width = swapChainExtent.width;
+		framebufferInfo.height = swapChainExtent.height;
+		framebufferInfo.layers = 1;
+		if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) !=
+			VK_SUCCESS) {
+			throw std::runtime_error("failed to create framebuffer!");
+		}
+	}
+}
+
+void Scop::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer,
 										  VkDeviceSize size) {
 	VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
@@ -96,7 +117,7 @@ void HelloTriangleApplication::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer
 	endSingleTimeCommands(commandBuffer);
 }
 
-void HelloTriangleApplication::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width,
+void Scop::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width,
 												 uint32_t height) {
 	VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
@@ -115,4 +136,12 @@ void HelloTriangleApplication::copyBufferToImage(VkBuffer buffer, VkImage image,
 						   &region);
 
 	endSingleTimeCommands(commandBuffer);
+}
+
+void Scop::createDepthResources() {
+	VkFormat depthFormat = findDepthFormat();
+	createImage(swapChainExtent.width, swapChainExtent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL,
+				VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+				depthImage, depthImageMemory);
+	depthImageView = createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
 }

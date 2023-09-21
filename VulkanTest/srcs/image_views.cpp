@@ -1,6 +1,6 @@
-#include "hellotriangle.hpp"
+#include "scop.hpp"
 
-void HelloTriangleApplication::createImage(uint32_t width, uint32_t height, VkFormat format,
+void Scop::createImage(uint32_t width, uint32_t height, VkFormat format,
 										   VkImageTiling tiling, VkImageUsageFlags usage,
 										   VkMemoryPropertyFlags properties, VkImage &image,
 										   VkDeviceMemory &imageMemory) {
@@ -38,13 +38,14 @@ void HelloTriangleApplication::createImage(uint32_t width, uint32_t height, VkFo
 	vkBindImageMemory(device, image, imageMemory, 0);
 }
 
-VkImageView HelloTriangleApplication::createImageView(VkImage image, VkFormat format) {
+VkImageView Scop::createImageView(VkImage image, VkFormat format,
+													  VkImageAspectFlags aspectFlags) {
 	VkImageViewCreateInfo viewInfo{};
 	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 	viewInfo.image = image;
 	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
 	viewInfo.format = format;
-	viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	viewInfo.subresourceRange.aspectMask = aspectFlags;
 	viewInfo.subresourceRange.baseMipLevel = 0;
 	viewInfo.subresourceRange.levelCount = 1;
 	viewInfo.subresourceRange.baseArrayLayer = 0;
@@ -58,14 +59,14 @@ VkImageView HelloTriangleApplication::createImageView(VkImage image, VkFormat fo
 	return imageView;
 }
 
-void HelloTriangleApplication::createImageViews() {
+void Scop::createImageViews() {
 	swapChainImageViews.resize(swapChainImages.size());
 
 	for (uint32_t i = 0; i < swapChainImages.size(); i++) {
-		swapChainImageViews[i] = createImageView(swapChainImages[i], swapChainImageFormat);
+		swapChainImageViews[i] = createImageView(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
 	}
 }
 
-void HelloTriangleApplication::createTextureImageView() {
-	textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB);
+void Scop::createTextureImageView() {
+	textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
 }

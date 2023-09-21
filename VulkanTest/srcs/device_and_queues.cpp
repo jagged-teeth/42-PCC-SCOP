@@ -1,13 +1,13 @@
-#include "hellotriangle.hpp"
+#include "scop.hpp"
 
 // to do : Transfer Queue (https://vulkan-tutorial.com/en/Vertex_buffers/Staging_buffer)
 
-void HelloTriangleApplication::createSurface() {
+void Scop::createSurface() {
 	if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS)
 		throw std::runtime_error("Failed to create window surface!");
 }
 
-void HelloTriangleApplication::createInstance() {
+void Scop::createInstance() {
 	if (enableValidationLayers && !checkValidationLayerSupport()) {
 		throw std::runtime_error("validation layers requested, but not available!");
 	}
@@ -46,7 +46,7 @@ void HelloTriangleApplication::createInstance() {
 	}
 }
 
-void HelloTriangleApplication::pickPhysicalDevice() {
+void Scop::pickPhysicalDevice() {
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 	if (deviceCount == 0) {
@@ -66,7 +66,7 @@ void HelloTriangleApplication::pickPhysicalDevice() {
 		throw std::runtime_error("Failed to find a suitable GPU!");
 }
 
-void HelloTriangleApplication::createLogicalDevice() {
+void Scop::createLogicalDevice() {
 	QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -109,23 +109,7 @@ void HelloTriangleApplication::createLogicalDevice() {
 	vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
 }
 
-bool HelloTriangleApplication::isDeviceSuitable(VkPhysicalDevice device) {
-	QueueFamilyIndices indices = findQueueFamilies(device);
-	bool extensionsSupported = checkDeviceExtensionSupport(device);
-	bool swapChainAdequate = false;
-	if (extensionsSupported) {
-		SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
-		swapChainAdequate =
-			!swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
-	}
-	VkPhysicalDeviceFeatures supportedFeatures;
-	vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
-
-	return indices.isComplete() && extensionsSupported && swapChainAdequate &&
-		   supportedFeatures.samplerAnisotropy;
-}
-
-QueueFamilyIndices HelloTriangleApplication::findQueueFamilies(VkPhysicalDevice device) {
+QueueFamilyIndices Scop::findQueueFamilies(VkPhysicalDevice device) {
 	QueueFamilyIndices indices;
 	uint32_t queueFamilyCount = 0;
 	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
@@ -148,11 +132,10 @@ QueueFamilyIndices HelloTriangleApplication::findQueueFamilies(VkPhysicalDevice 
 		}
 		i++;
 	}
-
 	return indices;
 }
 
-std::vector<const char *> HelloTriangleApplication::getRequiredExtensions() {
+std::vector<const char *> Scop::getRequiredExtensions() {
 	uint32_t glfwExtensionCount = 0;
 	const char **glfwExtensions;
 	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);

@@ -1,6 +1,6 @@
-#include "hellotriangle.hpp"
+#include "scop.hpp"
 
-void HelloTriangleApplication::createDescriptorSetLayout() {
+void Scop::createDescriptorSetLayout() {
 	VkDescriptorSetLayoutBinding uboLayoutBinding{};
 	uboLayoutBinding.binding = 0;
 	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -27,7 +27,7 @@ void HelloTriangleApplication::createDescriptorSetLayout() {
 		throw std::runtime_error("failed to create descriptor set layout!");
 }
 
-void HelloTriangleApplication::createUniformBuffers() {
+void Scop::createUniformBuffers() {
 	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
 	uniformBuffers.resize(MAX_FRAMES_IN_FLIGHT);
@@ -42,7 +42,7 @@ void HelloTriangleApplication::createUniformBuffers() {
 	}
 }
 
-void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
+void Scop::updateUniformBuffer(uint32_t currentImage) {
 	static auto startTime = std::chrono::high_resolution_clock::now();
 
 	auto currentTime = std::chrono::high_resolution_clock::now();
@@ -61,7 +61,7 @@ void HelloTriangleApplication::updateUniformBuffer(uint32_t currentImage) {
 	memcpy(uniformBuffersMapped[currentImage], &ubo, sizeof(ubo));
 }
 
-void HelloTriangleApplication::createDescriptorPool() {
+void Scop::createDescriptorPool() {
 	std::array<VkDescriptorPoolSize, 2> poolSizes{};
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	poolSizes[0].descriptorCount = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
@@ -79,7 +79,7 @@ void HelloTriangleApplication::createDescriptorPool() {
 	}
 }
 
-void HelloTriangleApplication::createDescriptorSets() {
+void Scop::createDescriptorSets() {
 	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, descriptorSetLayout);
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;

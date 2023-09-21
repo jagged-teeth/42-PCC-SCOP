@@ -1,7 +1,7 @@
 #include "bmploader.hpp"
-#include "hellotriangle.hpp"
+#include "scop.hpp"
 
-void HelloTriangleApplication::createTextureImage() {
+void Scop::createTextureImage() {
 	int texWidth, texHeight;
 
 	BMP textureFile = BMP("textures/sample.bmp");
@@ -45,7 +45,7 @@ void HelloTriangleApplication::createTextureImage() {
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void HelloTriangleApplication::transitionImageLayout(VkImage image, VkFormat format,
+void Scop::transitionImageLayout(VkImage image, VkFormat format,
 													 VkImageLayout oldLayout,
 													 VkImageLayout newLayout) {
 	VkCommandBuffer commandBuffer = beginSingleTimeCommands();
@@ -90,7 +90,7 @@ void HelloTriangleApplication::transitionImageLayout(VkImage image, VkFormat for
 	endSingleTimeCommands(commandBuffer);
 }
 
-void HelloTriangleApplication::createTextureSampler() {
+void Scop::createTextureSampler() {
 	VkSamplerCreateInfo samplerInfo{};
 	samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 	samplerInfo.magFilter = VK_FILTER_LINEAR;

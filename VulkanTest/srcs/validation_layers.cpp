@@ -1,6 +1,6 @@
-#include "hellotriangle.hpp"
+#include "scop.hpp"
 
-void HelloTriangleApplication::populateDebugMessengerCreateInfo(
+void Scop::populateDebugMessengerCreateInfo(
 	VkDebugUtilsMessengerCreateInfoEXT &createInfo) {
 	createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -15,7 +15,7 @@ void HelloTriangleApplication::populateDebugMessengerCreateInfo(
 	createInfo.pUserData = nullptr;
 }
 
-void HelloTriangleApplication::setupDebugMessenger() {
+void Scop::setupDebugMessenger() {
 	if (!enableValidationLayers)
 		return;
 	VkDebugUtilsMessengerCreateInfoEXT createInfo;
@@ -25,7 +25,7 @@ void HelloTriangleApplication::setupDebugMessenger() {
 		throw std::runtime_error("Failed to set up debug messenger!");
 }
 
-VKAPI_ATTR VkBool32 VKAPI_CALL HelloTriangleApplication::debugCallback(
+VKAPI_ATTR VkBool32 VKAPI_CALL Scop::debugCallback(
 	VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 	VkDebugUtilsMessageTypeFlagsEXT messageType,
 	const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData) {
@@ -34,7 +34,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL HelloTriangleApplication::debugCallback(
 	return VK_FALSE;
 }
 
-bool HelloTriangleApplication::checkValidationLayerSupport() {
+bool Scop::checkValidationLayerSupport() {
 	uint32_t layerCount;
 	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -56,7 +56,7 @@ bool HelloTriangleApplication::checkValidationLayerSupport() {
 	return true;
 }
 
-bool HelloTriangleApplication::checkDeviceExtensionSupport(VkPhysicalDevice device) {
+bool Scop::checkDeviceExtensionSupport(VkPhysicalDevice device) {
 	uint32_t extensionCount;
 	vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 

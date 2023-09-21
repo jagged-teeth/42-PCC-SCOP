@@ -112,7 +112,7 @@ const std::vector<Vertex> vertices = {{{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
 
 const std::vector<uint16_t> indices = {0, 1, 2, 2, 3, 0};
 
-class HelloTriangleApplication {
+class Scop {
 public:
 	void run() {
 		initWindow();
@@ -180,7 +180,7 @@ private:
 	}
 
 	static void framebufferResizeCallback(GLFWwindow *window, int width, int height) {
-		auto app = reinterpret_cast<HelloTriangleApplication *>(glfwGetWindowUserPointer(window));
+		auto app = reinterpret_cast<Scop *>(glfwGetWindowUserPointer(window));
 		app->framebufferResized = true;
 	}
 
@@ -1299,7 +1299,7 @@ private:
 };
 
 int main() {
-	HelloTriangleApplication app;
+	Scop app;
 
 	try {
 		app.run();

@@ -1,7 +1,7 @@
-#include "hellotriangle.hpp"
+#include "scop.hpp"
 
 int main() {
-	HelloTriangleApplication app;
+	Scop app;
 
 	try {
 		app.run();

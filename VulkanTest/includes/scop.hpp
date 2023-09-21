@@ -8,7 +8,7 @@ const bool enableValidationLayers = false;
 const bool enableValidationLayers = true;
 #endif
 
-class HelloTriangleApplication {
+class Scop {
 public:
 	void run() {
 		initWindow();
@@ -49,7 +49,11 @@ private:
 	VkDeviceMemory textureImageMemory;
 	VkImageView textureImageView;
 	VkSampler textureSampler;
-	
+
+	VkImage depthImage;
+	VkDeviceMemory depthImageMemory;
+	VkImageView depthImageView;
+
 	// it is recommended to use a single buffer to store multiple buffers (like vertexBuffer) and
 	// use offsets in commands (like vkCmdBindVertexBuffers). The reason is that your data will be
 	// more cache friendly, because it's closer together in memory. This is especially important
@@ -105,7 +109,7 @@ private:
 	void recreateSwapChain();
 	void cleanupSwapChain();
 
-	VkImageView createImageView(VkImage image, VkFormat format);
+	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
 	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
 					 VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage &image,
 					 VkDeviceMemory &imageMemory);
@@ -142,6 +146,11 @@ private:
 	void createTextureImageView();
 	void createTextureSampler();
 
+	VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling,
+								 VkFormatFeatureFlags features);
+	void createDepthResources();
+	VkFormat findDepthFormat();
+	bool hasStencilComponent(VkFormat format);
 	VkShaderModule createShaderModule(const std::vector<char> &node);
 
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
