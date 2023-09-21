@@ -1,55 +1,138 @@
-// Write a BMP parser idea
+#pragma once
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
+#include <algorithm>
 
-struct BMPHeader {
-	char signature[2];
-	uint32_t fileSize;
-	uint32_t reserved;
-	uint32_t dataOffset;
+#pragma pack(push, 1)
+struct BMPFileHeader {
+	uint16_t file_type{0x4D42};
+	uint32_t file_size{0};
+	uint16_t reserved1{0};
+	uint16_t reserved2{0};
+	uint32_t offset{0};
 };
 
 struct BMPInfoHeader {
-	uint32_t headerSize;
-	int32_t width;
-	int32_t height;
-	uint16_t planes;
-	uint16_t bitDepth;
-	uint32_t compression;
-	uint32_t imageSize;
-	int32_t xPixelsPerMeter;
-	int32_t yPixelsPerMeter;
-	uint32_t colorsUsed;
-	uint32_t colorsImportant;
+	uint32_t size{0};
+	int32_t width{0};
+	int32_t height{0};
+	uint16_t planes{1};
+	uint16_t bit_count{0};
+	uint32_t compression{0};
+	uint32_t size_image{0};
+	int32_t x_pixels_per_meter{0};
+	int32_t y_pixels_per_meter{0};
+	uint32_t colors_used{0};
+	uint32_t colors_important{0};
 };
 
-std::vector<uint8_t> loadBMP(const std::string &filename) {
-	std::ifstream file(filename, std::ios::binary);
-	if (!file) {
-		std::cerr << "Failed to open file: " << filename << std::endl;
-		return {};
+struct BMPColorHeader {
+	uint32_t red_mask{0x00ff0000};
+	uint32_t green_mask{0x0000ff00};
+	uint32_t blue_mask{0x000000ff};
+	uint32_t alpha_mask{0xff000000};
+	uint32_t color_space_type{0x73524742};
+	uint32_t unused[16]{0};
+};
+#pragma pack(pop)
+
+struct BMP {
+	BMPFileHeader file_header;
+	BMPInfoHeader info_header;
+	BMPColorHeader color_header;
+	std::vector<uint8_t> data;
+
+	BMP(const char *filepath) { read(filepath); }
+
+	void read(const char *filepath) {
+		std::ifstream input{filepath, std::ios_base::binary};
+		if (input) {
+			input.read((char *)&file_header, sizeof(file_header));
+
+			if (file_header.file_type != 0x4D42) {
+				throw std::runtime_error("Error! Unrecognized file format.");
+			}
+
+			input.read((char *)&info_header, sizeof(info_header));
+
+			if (info_header.bit_count == 32) {
+				if (info_header.size >= (sizeof(BMPInfoHeader) + sizeof(BMPColorHeader))) {
+					input.read((char *)&color_header, sizeof(color_header));
+					check_color_header(color_header);
+				} else {
+					std::cerr << "Warning! The file \"" << filepath
+							  << "\" does not seem to contain a color header!\n";
+					throw std::runtime_error("Error! Unrecognized file format.");
+				}
+			}
+
+			input.seekg(file_header.offset, input.beg);
+
+			if (info_header.bit_count == 32) {
+				info_header.size = sizeof(BMPInfoHeader) + sizeof(BMPColorHeader);
+				file_header.offset =
+					sizeof(BMPFileHeader) + sizeof(BMPInfoHeader) + sizeof(BMPColorHeader);
+			} else {
+				info_header.size = sizeof(BMPInfoHeader);
+				file_header.offset = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader);
+			}
+
+			file_header.file_size = file_header.offset;
+
+			if (info_header.height < 0) {
+				throw std::runtime_error("Error! The program can only treat BMP images with the "
+										 "origin in the bottom left corner!");
+			}
+
+			data.resize(info_header.width * info_header.height * info_header.bit_count / 8);
+
+			if (info_header.width % 4 == 0) {
+				input.read((char *)data.data(), data.size());
+				file_header.file_size += static_cast<uint32_t>(data.size());
+			} else {
+				row_stride = info_header.width * info_header.bit_count / 8;
+				uint32_t new_stride = make_stride_aligned(4);
+				std::vector<uint8_t> padding_row(new_stride - row_stride);
+
+				for (int y = 0; y < info_header.height; ++y) {
+					input.read((char *)(data.data() + row_stride * y), row_stride);
+					input.read((char *)padding_row.data(), padding_row.size());
+				}
+				file_header.file_size +=
+					static_cast<uint32_t>(data.size()) +
+					info_header.height * static_cast<uint32_t>(padding_row.size());
+			}
+			if (info_header.height < 0) {
+				std::reverse(data.begin(), data.end());
+			}
+		} else {
+			throw std::runtime_error("Error! Unable to open the input image file.");
+		}
 	}
 
-	BMPHeader header;
-	file.read(reinterpret_cast<char *>(&header), sizeof(BMPHeader));
-
-	if (header.signature[0] != 'B' || header.signature[1] != 'M') {
-		std::cerr << "Invalid BMP file: " << filename << std::endl;
-		return {};
+private:
+	uint32_t row_stride{0};
+	uint32_t make_stride_aligned(uint32_t align_stride) {
+		uint32_t new_stride = row_stride;
+		while (new_stride % align_stride != 0) {
+			new_stride++;
+		}
+		return new_stride;
 	}
-
-	BMPInfoHeader infoHeader;
-	file.read(reinterpret_cast<char *>(&infoHeader), sizeof(BMPInfoHeader));
-
-	if (infoHeader.bitDepth != 24) {
-		std::cerr << "Unsupported BMP format: " << filename << std::endl;
-		return {};
+	void check_color_header(BMPColorHeader &color_header) {
+		BMPColorHeader expected_color_header;
+		if (expected_color_header.red_mask != color_header.red_mask ||
+			expected_color_header.blue_mask != color_header.blue_mask ||
+			expected_color_header.green_mask != color_header.green_mask ||
+			expected_color_header.alpha_mask != color_header.alpha_mask) {
+			throw std::runtime_error("Unexpected color mask format! The program expects the pixel "
+									 "data to be in the BGRA format");
+		}
+		if (expected_color_header.color_space_type != color_header.color_space_type) {
+			throw std::runtime_error("Unexpected color space type! The program expects sRGB values "
+									 "rather than non-sRGB values.");
+		}
 	}
-
-	std::vector<uint8_t> imageData(infoHeader.imageSize);
-	file.seekg(header.dataOffset, std::ios::beg);
-	file.read(reinterpret_cast<char *>(imageData.data()), infoHeader.imageSize);
-
-	return imageData;
-}
+};

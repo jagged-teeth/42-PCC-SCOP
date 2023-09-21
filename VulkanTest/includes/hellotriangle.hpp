@@ -45,6 +45,11 @@ private:
 
 	VkCommandPool commandPool;
 
+	VkImage textureImage;
+	VkDeviceMemory textureImageMemory;
+	VkImageView textureImageView;
+	VkSampler textureSampler;
+	
 	// it is recommended to use a single buffer to store multiple buffers (like vertexBuffer) and
 	// use offsets in commands (like vkCmdBindVertexBuffers). The reason is that your data will be
 	// more cache friendly, because it's closer together in memory. This is especially important
@@ -100,6 +105,10 @@ private:
 	void recreateSwapChain();
 	void cleanupSwapChain();
 
+	VkImageView createImageView(VkImage image, VkFormat format);
+	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
+					 VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage &image,
+					 VkDeviceMemory &imageMemory);
 	void createImageViews();
 	void createRenderPass();
 	void createGraphicsPipeline();
@@ -108,6 +117,8 @@ private:
 	void createCommandPool();
 	void createCommandBuffers();
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+	VkCommandBuffer beginSingleTimeCommands();
+	void endSingleTimeCommands(VkCommandBuffer commandBuffer);
 
 	void createSyncObjects();
 
@@ -115,6 +126,7 @@ private:
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties,
 					  VkBuffer &buffer, VkDeviceMemory &bufferMemory);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 	void createVertexBuffer();
 	void createIndexBuffer();
 
@@ -123,6 +135,12 @@ private:
 	void updateUniformBuffer(uint32_t currentImage);
 	void createDescriptorPool();
 	void createDescriptorSets();
+
+	void createTextureImage();
+	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout,
+							   VkImageLayout newLayout);
+	void createTextureImageView();
+	void createTextureSampler();
 
 	VkShaderModule createShaderModule(const std::vector<char> &node);
 
