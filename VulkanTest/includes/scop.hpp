@@ -1,3 +1,5 @@
+#ifndef SCOP_HPP
+#define SCOP_HPP
 #define GLFW_INCLUDE_VULKAN
 
 #include "utils.hpp"
@@ -161,3 +163,5 @@ private:
 				  VkDebugUtilsMessageTypeFlagsEXT messageType,
 				  const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData);
 };
+
+#endif

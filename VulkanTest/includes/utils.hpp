@@ -91,12 +91,12 @@ const std::vector<Vertex> vertices = {{{-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f},
 									  {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}};
 
 const std::vector<uint16_t> indices = {
-	0, 1, 2, 2, 3, 0, // front
-	1, 5, 6, 6, 2, 1, // right
-	7, 6, 5, 5, 4, 7, // back
-	4, 0, 3, 3, 7, 4, // left
-	3, 2, 6, 6, 7, 3, // top
-	4, 5, 1, 1, 0, 4  // bottom
+	0, 1, 2, 2, 3, 0,
+	1, 5, 6, 6, 2, 1,
+	7, 6, 5, 5, 4, 7,
+	4, 0, 3, 3, 7, 4,
+	3, 2, 6, 6, 7, 3,
+	4, 5, 1, 1, 0, 4
 };
 
 static std::vector<char> readFile(const std::string &filename) {

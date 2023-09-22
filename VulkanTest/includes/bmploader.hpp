@@ -1,9 +1,10 @@
 #pragma once
+#include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
-#include <algorithm>
 
 #pragma pack(push, 1)
 struct BMPFileHeader {
@@ -34,7 +35,6 @@ struct BMPColorHeader {
 	uint32_t blue_mask{0x000000ff};
 	uint32_t alpha_mask{0xff000000};
 	uint32_t color_space_type{0x73524742};
-	uint32_t unused[16]{0};
 };
 #pragma pack(pop)
 
@@ -57,6 +57,7 @@ struct BMP {
 
 			input.read((char *)&info_header, sizeof(info_header));
 
+			// The BMPColorHeader is used only for transparent images
 			if (info_header.bit_count == 32) {
 				if (info_header.size >= (sizeof(BMPInfoHeader) + sizeof(BMPColorHeader))) {
 					input.read((char *)&color_header, sizeof(color_header));
@@ -68,8 +69,10 @@ struct BMP {
 				}
 			}
 
+			// Jump to the pixel data location
 			input.seekg(file_header.offset, input.beg);
 
+			// Adjust the header fields for output
 			if (info_header.bit_count == 32) {
 				info_header.size = sizeof(BMPInfoHeader) + sizeof(BMPColorHeader);
 				file_header.offset =
@@ -78,7 +81,6 @@ struct BMP {
 				info_header.size = sizeof(BMPInfoHeader);
 				file_header.offset = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader);
 			}
-
 			file_header.file_size = file_header.offset;
 
 			if (info_header.height < 0) {
@@ -88,6 +90,7 @@ struct BMP {
 
 			data.resize(info_header.width * info_header.height * info_header.bit_count / 8);
 
+			// Check if the row padding is multiple of 4
 			if (info_header.width % 4 == 0) {
 				input.read((char *)data.data(), data.size());
 				file_header.file_size += static_cast<uint32_t>(data.size());
@@ -104,16 +107,15 @@ struct BMP {
 					static_cast<uint32_t>(data.size()) +
 					info_header.height * static_cast<uint32_t>(padding_row.size());
 			}
-			if (info_header.height < 0) {
-				std::reverse(data.begin(), data.end());
-			}
 		} else {
-			throw std::runtime_error("Error! Unable to open the input image file.");
+			throw std::runtime_error("Unable to open the input image file.");
 		}
 	}
 
 private:
 	uint32_t row_stride{0};
+
+	// Add 1 to the row_stride until it is divisible with align_stride
 	uint32_t make_stride_aligned(uint32_t align_stride) {
 		uint32_t new_stride = row_stride;
 		while (new_stride % align_stride != 0) {
@@ -121,18 +123,20 @@ private:
 		}
 		return new_stride;
 	}
-	void check_color_header(BMPColorHeader &color_header) {
+
+	// Check if the pixel data is stored as BGRA and if the color space type is sRGB
+	void check_color_header(BMPColorHeader &bmp_color_header) {
 		BMPColorHeader expected_color_header;
-		if (expected_color_header.red_mask != color_header.red_mask ||
-			expected_color_header.blue_mask != color_header.blue_mask ||
-			expected_color_header.green_mask != color_header.green_mask ||
-			expected_color_header.alpha_mask != color_header.alpha_mask) {
+		if (expected_color_header.red_mask != bmp_color_header.red_mask ||
+			expected_color_header.blue_mask != bmp_color_header.blue_mask ||
+			expected_color_header.green_mask != bmp_color_header.green_mask ||
+			expected_color_header.alpha_mask != bmp_color_header.alpha_mask) {
 			throw std::runtime_error("Unexpected color mask format! The program expects the pixel "
 									 "data to be in the BGRA format");
 		}
-		if (expected_color_header.color_space_type != color_header.color_space_type) {
-			throw std::runtime_error("Unexpected color space type! The program expects sRGB values "
-									 "rather than non-sRGB values.");
+		if (expected_color_header.color_space_type != bmp_color_header.color_space_type) {
+			throw std::runtime_error(
+				"Unexpected color space type! The program expects sRGB values");
 		}
 	}
 };

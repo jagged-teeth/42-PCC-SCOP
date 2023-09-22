@@ -2,16 +2,17 @@
 #include "scop.hpp"
 
 void Scop::createTextureImage() {
-	int texWidth, texHeight;
+	 int texWidth, texHeight;
 
-	BMP textureFile = BMP("textures/sample.bmp");
-	texWidth = textureFile.info_header.width;
-	texHeight = textureFile.info_header.height;
-	VkDeviceSize imageSize = texWidth * texHeight * 4;
+	 BMP my_loader = BMP("textures/sample1.bmp");
 
-	if (textureFile.data.empty()) {
+	 texWidth = my_loader.info_header.width;
+	 texHeight = my_loader.info_header.height;
+	 VkDeviceSize imageSize = texWidth * texHeight * 4;
+
+	 if (my_loader.data.empty()) {
 		throw std::runtime_error("Error! Unable to load texture image!");
-	}
+	 }
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
@@ -21,11 +22,11 @@ void Scop::createTextureImage() {
 				 stagingBuffer, stagingBufferMemory);
 
 	void *data;
-	vkMapMemory(device, stagingBufferMemory, 0, textureFile.data.size(), 0, &data);
-	memcpy(data, textureFile.data.data(), static_cast<size_t>(imageSize));
+	vkMapMemory(device, stagingBufferMemory, 0, imageSize, 0, &data);
+	memcpy(data, my_loader.data.data(), static_cast<size_t>(imageSize));
 	vkUnmapMemory(device, stagingBufferMemory);
 
-	textureFile.data.clear();
+	my_loader.data.clear();
 
 	createImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL,
 				VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
@@ -45,9 +46,8 @@ void Scop::createTextureImage() {
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
-void Scop::transitionImageLayout(VkImage image, VkFormat format,
-													 VkImageLayout oldLayout,
-													 VkImageLayout newLayout) {
+void Scop::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout,
+								 VkImageLayout newLayout) {
 	VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
 	VkImageMemoryBarrier barrier{};
