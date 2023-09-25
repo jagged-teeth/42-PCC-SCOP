@@ -4,7 +4,7 @@
 void Scop::createTextureImage() {
 	 int texWidth, texHeight;
 
-	 BMP my_loader = BMP("textures/sample1.bmp");
+	 BMP my_loader = BMP(TEXTURE_PATH);
 
 	 texWidth = my_loader.info_header.width;
 	 texHeight = my_loader.info_header.height;

@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++17 -Iincludes/ -O2 -g -DNDEBUG
+CFLAGS = -std=c++17 -Iincludes/ -O3 -g -DNDEBUG
 LDFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
 SRCS = $(wildcard srcs/*.cpp)

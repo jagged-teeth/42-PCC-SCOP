@@ -12,7 +12,8 @@ const bool enableValidationLayers = true;
 
 class Scop {
 public:
-	void run() {
+	Scop(const char *modelPath, const char *texturePath) : MODEL_PATH(modelPath), TEXTURE_PATH(texturePath) {};
+		void run() {
 		initWindow();
 		initVulkan();
 		mainLoop();
@@ -21,6 +22,8 @@ public:
 	void setFramebufferResized(bool resized) { framebufferResized = resized; };
 
 private:
+	const char *MODEL_PATH;
+	const char *TEXTURE_PATH;
 	GLFWwindow *window;
 
 	VkInstance instance;
@@ -61,6 +64,8 @@ private:
 	// more cache friendly, because it's closer together in memory. This is especially important
 	// for integrated graphics cards that use shared memory.
 
+	std::vector<Vertex> vertices;
+	std::vector<uint32_t> indices;
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;
 	VkBuffer indexBuffer;
@@ -79,6 +84,7 @@ private:
 	std::vector<VkSemaphore> renderFinishedSemaphores;
 	std::vector<VkFence> inFlightFences;
 	uint32_t currentFrame = 0;
+
 
 	bool framebufferResized = false;
 
@@ -147,6 +153,9 @@ private:
 							   VkImageLayout newLayout);
 	void createTextureImageView();
 	void createTextureSampler();
+
+	void loadModel();
+	void computeUVs(Vertex &vertex);
 
 	VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling,
 								 VkFormatFeatureFlags features);

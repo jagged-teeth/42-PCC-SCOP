@@ -2,6 +2,7 @@
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#define GLM_ENABLE_EXPERIMENTAL
 
 #include <GLFW/glfw3.h>
 #include <algorithm>
@@ -13,6 +14,7 @@
 #include <fstream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/hash.hpp>
 #include <iostream>
 #include <limits>
 #include <optional>
@@ -25,6 +27,8 @@ const uint32_t HEIGHT = 600;
 const int MAX_FRAMES_IN_FLIGHT = 2;
 const std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
 const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+// const std::string MODEL_PATH = "models/42.obj";
+// const std::string TEXTURE_PATH = "textures/sample2.bmp";
 
 struct QueueFamilyIndices {
 	std::optional<uint32_t> graphicsFamily;
@@ -72,31 +76,25 @@ struct Vertex {
 
 		return attributeDescriptions;
 	}
+
+	bool operator==(const Vertex &other) const {
+		return pos == other.pos && color == other.color && texCoord == other.texCoord;
+	}
 };
+
+namespace std {
+template <> struct hash<Vertex> {
+	size_t operator()(Vertex const &vertex) const {
+		return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
+			   (hash<glm::vec2>()(vertex.texCoord) << 1);
+	}
+};
+} // namespace std
 
 struct UniformBufferObject {
 	alignas(16) glm::mat4 model;
 	alignas(16) glm::mat4 view;
 	alignas(16) glm::mat4 proj;
-};
-
-const std::vector<Vertex> vertices = {{{-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-									  {{0.5f, -0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-									  {{0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-									  {{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-
-									  {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-									  {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-									  {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-									  {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}};
-
-const std::vector<uint16_t> indices = {
-	0, 1, 2, 2, 3, 0,
-	1, 5, 6, 6, 2, 1,
-	7, 6, 5, 5, 4, 7,
-	4, 0, 3, 3, 7, 4,
-	3, 2, 6, 6, 7, 3,
-	4, 5, 1, 1, 0, 4
 };
 
 static std::vector<char> readFile(const std::string &filename) {
@@ -133,3 +131,22 @@ inline void DestroyDebugUtilsMessengerEXT(VkInstance instance,
 	if (func != nullptr)
 		func(instance, debugMessenger, pAllocator);
 }
+
+// const std::vector<Vertex> vertices = {{{-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+//									  {{0.5f, -0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+//									  {{0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+//									  {{-0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
+
+//									  {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+//									  {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+//									  {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+//									  {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}};
+
+// const std::vector<uint16_t> indices = {
+//	0, 1, 2, 2, 3, 0,
+//	1, 5, 6, 6, 2, 1,
+//	7, 6, 5, 5, 4, 7,
+//	4, 0, 3, 3, 7, 4,
+//	3, 2, 6, 6, 7, 3,
+//	4, 5, 1, 1, 0, 4
+// };
