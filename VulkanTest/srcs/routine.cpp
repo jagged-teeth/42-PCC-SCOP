@@ -54,9 +54,6 @@ void Scop::mainLoop() {
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 		}
-
-		
-
 		modelScale = glm::clamp(modelScale, 0.01f, 1.0f);
 		drawFrame();
 	}
