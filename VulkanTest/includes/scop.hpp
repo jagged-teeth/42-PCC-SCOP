@@ -12,8 +12,9 @@ const bool enableValidationLayers = true;
 
 class Scop {
 public:
-	Scop(const char *modelPath, const char *texturePath) : MODEL_PATH(modelPath), TEXTURE_PATH(texturePath) {};
-		void run() {
+	Scop(const char *modelPath, const char *texturePath)
+		: MODEL_PATH(modelPath), TEXTURE_PATH(texturePath){};
+	void run() {
 		initWindow();
 		initVulkan();
 		mainLoop();
@@ -85,10 +86,15 @@ private:
 	std::vector<VkFence> inFlightFences;
 	uint32_t currentFrame = 0;
 
-
 	bool framebufferResized = false;
+
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	const float scaleFactor = 0.01f;
 	float modelScale = 0.01f;
+	float deltaTime = 0.0f;
+	float lastFrame = 0.0f;
 
 	void initWindow();
 	void initVulkan();
