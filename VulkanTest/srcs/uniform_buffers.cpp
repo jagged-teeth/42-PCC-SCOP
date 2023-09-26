@@ -54,8 +54,7 @@ void Scop::updateUniformBuffer(uint32_t currentImage) {
 		glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	// Adjust model scale
-	// float modelScale = 0.01f;
-	// ubo.model = glm::scale(ubo.model, glm::vec3(modelScale, modelScale, modelScale));
+	 ubo.model = glm::scale(ubo.model, glm::vec3(modelScale, modelScale, modelScale));
 
 	// Adjust zoom level here
 	float zoomLevel = 2.0f;

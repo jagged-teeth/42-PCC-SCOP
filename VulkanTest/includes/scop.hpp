@@ -87,6 +87,8 @@ private:
 
 
 	bool framebufferResized = false;
+	const float scaleFactor = 0.01f;
+	float modelScale = 0.01f;
 
 	void initWindow();
 	void initVulkan();

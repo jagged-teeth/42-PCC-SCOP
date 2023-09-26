@@ -45,6 +45,19 @@ void Scop::initVulkan() {
 void Scop::mainLoop() {
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+			modelScale += scaleFactor;
+		}
+		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+			modelScale -= scaleFactor;
+		}
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+			glfwSetWindowShouldClose(window, GLFW_TRUE);
+		}
+
+		
+
+		modelScale = glm::clamp(modelScale, 0.01f, 1.0f);
 		drawFrame();
 	}
 
