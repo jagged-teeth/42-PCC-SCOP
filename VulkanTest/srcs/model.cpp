@@ -1,8 +1,7 @@
-#include "objloader.hpp"
-#include "scop.hpp"
+// #include "scop.hpp"
 // #define TINYOBJLOADER_IMPLEMENTATION
 // #include "tiny_obj_loader.h"
-#include <unordered_map>
+// #include <unordered_map>
 
 // void Scop::loadModel() {
 //	tinyobj::attrib_t attrib;
@@ -58,6 +57,13 @@
 //		}
 //	}
 //}
+
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+
+#include "objloader.hpp"
+#include "scop.hpp"
+#include <unordered_map>
 
 void Scop::loadModel() {
 	std::vector<glm::vec3> temp_vertices;
