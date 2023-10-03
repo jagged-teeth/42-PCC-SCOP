@@ -95,9 +95,9 @@ Then, I iterate through each vertex in `temp_vertices`, create a Vertex structur
 
 ## Resources
 
-https://vulkan-tutorial.com/
-https://github.com/Overv/VulkanTutorial/tree/main
-https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/best_practices.html
-https://paulbourke.net/dataformats/obj/
-https://paulbourke.net/dataformats/bmp/
-https://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
+- https://vulkan-tutorial.com/
+- https://github.com/Overv/VulkanTutorial/tree/main
+- https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/best_practices.html
+- https://paulbourke.net/dataformats/obj/
+- https://paulbourke.net/dataformats/bmp/
+- https://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
