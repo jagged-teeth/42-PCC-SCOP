@@ -4,7 +4,7 @@
 <img src="https://s6.gifyu.com/images/S6MMV.gif" width="600" height="320" />
 </div>
 
-This project explores basic GPU rendering through Vulkan, rendering a textured model within a GLFW window using C++. The model, sourced from an OBJ file and textured from a BMP file, rotates continuously around its central axis. Users can zoom in/out on the model.
+This project explores basic GPU rendering through Vulkan, rendering a textured model within a GLFW window using C++. The model, sourced from an OBJ file and textured from a BMP file, rotates continuously around its central axis. Users can zoom in & out and rotate around the model.
 
 #### Technologies Used
 
@@ -27,7 +27,7 @@ A Makefile is provided for building the project. Navigate to the project directo
 ```fish
 make
 ```
-or 
+or
 ```fish
 make debug
 ```
@@ -38,6 +38,7 @@ to get the validation layers. This will compile the source files and generate th
 ./scop model.obj texture.bmp
 ```
 `Up Arrow` and `Down Arrow` for the zoom functions.
+`Left Arrow` and `Right Arrow` to rotate around the object.
 
 ## Vulkan Concepts
 Vulkan is a low-overhead, cross-platform 3D graphics and computing API. This project followed the "Hello Triangle" tutorial, extending the concepts learned to render a textured 3D model.
