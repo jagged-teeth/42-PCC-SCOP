@@ -93,4 +93,11 @@ I call the `loadObj` function to load the vertex data from the OBJ file into `te
 
 Then, I iterate through each vertex in `temp_vertices`, create a Vertex structure, assign the position and a color, and compute the texture coordinates using the `computeUVs` function (spherical projection). Lastly, I perform vertex deduplication by checking if a vertex is unique, which helps in optimizing the data by eliminating duplicate vertices and thus, conserving memory and improving rendering performance.
 
+## RESOURCES
 
+https://vulkan-tutorial.com/
+https://github.com/Overv/VulkanTutorial/tree/main
+https://vulkan.lunarg.com/doc/view/1.2.189.0/linux/best_practices.html
+https://paulbourke.net/dataformats/obj/
+https://paulbourke.net/dataformats/bmp/
+https://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
