@@ -7,7 +7,7 @@ OBJS = $(patsubst srcs/%.cpp, obj/%.o, $(SRCS))
 
 INCS = $(wildcard includes/*.hpp)
 
-NAME = VulkanTest
+NAME = scop
 
 OBJDIR = obj
 
