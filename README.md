@@ -1,4 +1,9 @@
 # SCOP : GPU Rendering Project
+
+<div id="header" align="center">
+<img src="https://s6.gifyu.com/images/S6MMV.gif" width="650" height="320" />
+</div>
+
 This project explores basic GPU rendering through Vulkan, rendering a textured model within a GLFW window using C++. The model, sourced from an OBJ file and textured from a BMP file, rotates continuously around its central axis. Users can zoom in/out on the model.
 
 #### Technologies Used
@@ -6,10 +11,6 @@ This project explores basic GPU rendering through Vulkan, rendering a textured m
 - **Rendering API**: Vulkan
 - **Window and Event Management**: GLFW
 - **Language**: C++
-
-<div id="header" align="center">
-<img src="https://s6.gifyu.com/images/S6MMV.gif" width="650" height="320" />
-</div>
 
 ## Getting Started
 
