@@ -89,29 +89,29 @@ The OBJ loader is responsible for reading the geometry data from an OBJ file and
 ### Loading the OBJ in Vulkan
 I call the `loadObj` function to load the vertex data from the OBJ file into `temp_vertices`. Following this, I calculate the center of mass of the model to reposition the vertices around the center, which ensures a balanced distribution of vertices around the origin, aiding in a better rendering and manipulation of the model.
 ```cpp
-	std::vector<glm::vec3> temp_vertices;
+std::vector<glm::vec3> temp_vertices;
 
-	if (!loadObj(MODEL_PATH, temp_vertices)) {
-		throw std::runtime_error("failed to load model!");
-	}
-	// ...
+if (!loadObj(MODEL_PATH, temp_vertices)) {
+	throw std::runtime_error("failed to load model!");
+}
+// ...
 ```
 
 Then, I iterate through each vertex in `temp_vertices`, create a Vertex structure, assign the position and a color, and compute the texture coordinates using the `computeUVs` function (spherical projection). Lastly, I perform vertex deduplication by checking if a vertex is unique, which helps in optimizing the data by eliminating duplicate vertices and thus, conserving memory and improving rendering performance.
 ```cpp
 for (size_t i = 0; i < temp_vertices.size(); i++) {
-		Vertex vertex{};
+	Vertex vertex{};
 
-		vertex.pos = temp_vertices[i];
-		vertex.color = {1.0f, 1.0f, 1.0f};
+	vertex.pos = temp_vertices[i];
+	vertex.color = {1.0f, 1.0f, 1.0f};
 
-		computeUVs(vertex);
-		if (uniqueVertices.count(vertex) == 0) {
-			uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
-			vertices.push_back(vertex);
-		}
-		indices.push_back(uniqueVertices[vertex]);
+	computeUVs(vertex);
+	if (uniqueVertices.count(vertex) == 0) {
+		uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+		vertices.push_back(vertex);
 	}
+	indices.push_back(uniqueVertices[vertex]);
+}
 ```
 
 ## Resources
