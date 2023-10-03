@@ -4,6 +4,7 @@ This project explores basic GPU rendering through Vulkan, rendering a textured m
 <div id="header" align="center">
 <img src="https://s6.gifyu.com/images/S6MMV.gif" width="480" height="278" />
 </div>
+
 #### Technologies Used
 
 - **Rendering API**: Vulkan
