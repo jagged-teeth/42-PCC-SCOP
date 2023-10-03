@@ -1,12 +1,12 @@
- #pragma once
+#pragma once
 
- #include <cstring>
- #include <fstream>
- #include <glm/glm.hpp>
- #include <iostream>
- #include <vector>
+#include <cstring>
+#include <fstream>
+#include <glm/glm.hpp>
+#include <iostream>
+#include <vector>
 
- bool loadObj(const char *filepath, std::vector<glm::vec3> &out_vertices) {
+bool loadObj(const char *filepath, std::vector<glm::vec3> &out_vertices) {
 	std::vector<unsigned int> vertex_indices;
 	std::vector<glm::vec3> temp_vertices;
 
@@ -61,15 +61,15 @@
 	return true;
 }
 
-//#pragma once
+// #pragma once
 
-//#include <cstring>
-//#include <fstream>
-//#include <glm/glm.hpp>
-//#include <iostream>
-//#include <vector>
+// #include <cstring>
+// #include <fstream>
+// #include <glm/glm.hpp>
+// #include <iostream>
+// #include <vector>
 
-//bool loadObj(const char *filepath, std::vector<glm::vec3> &out_vertices,
+// bool loadObj(const char *filepath, std::vector<glm::vec3> &out_vertices,
 //			 std::vector<glm::vec2> *out_texcoords = nullptr,
 //			 std::vector<glm::vec3> *out_normals = nullptr) {
 //	std::vector<unsigned int> vertex_indices, texcoord_indices, normal_indices;
