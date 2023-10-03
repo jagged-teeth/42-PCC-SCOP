@@ -8,7 +8,7 @@ This project explores basic GPU rendering through Vulkan, rendering a textured m
 - **Language**: C++
 
 <div id="header" align="center">
-<img src="https://s6.gifyu.com/images/S6MMV.gif" width="600" height="278" />
+<img src="https://s6.gifyu.com/images/S6MMV.gif" width="650" height="320" />
 </div>
 
 ## Getting Started
