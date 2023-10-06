@@ -41,51 +41,49 @@ make
 ## Vulkan Concepts
 Vulkan is a low-overhead, cross-platform 3D graphics and computing API. This project followed the "Hello Triangle" tutorial, extending the concepts learned to render a textured 3D model.
 
-<details>
-<summary> The chain of command explained </summary>
+### The chain of command explained
 
-1. **Initialization**:
+<details>
+<summary>Initialization</summary>
+
+Vulkan interacts with the GPU through Physical Devices and Queue Families. A Physical Device represents a GPU on your machine, while Queue Families categorize the operations (e.g., graphics, compute) that queues in this family can execute. Queues are created from Queue Families and are interfaces to the GPU, allowing commands to be sent for execution.
 
 - **Vulkan Instance**: Create a Vulkan instance which represents a connection between your application and the Vulkan library.
 - **Validation Layers**: Configure the validation layers that assist in debugging by verifying the API calls to ensure they adhere to the Vulkan specifications.
 - **Extensions**: Load the necessary extensions to access specific functionalities.
 - **Physical and Logical Devices**: Identify and select the GPU devices on which your application will run, and create a logical device to interact with them.
-
-2. **Resource Creation**:
-
+</details>
+<details>
+<summary>Resource Creation</summary>
 - **Memory**: Allocate and manage memory for graphic resources.
 - **Buffers and Images**: Create buffers and images to store graphic data.
-- **Graphic and Compute Pipelines**: Configure the pipelines to define the graphic and compute processing to be conducted.
 
-3. **Rendering**:
-
-- **Command Buffers**: Record commands into command buffers. These commands include operations such as drawing, memory copying, etc.
-- **Command Pools**: Manage command pools to allocate and free command buffers.
-- **Submission and Synchronization**: Submit the command buffers to the GPU queues for execution, and synchronize the execution between the CPU and the GPU using semaphores and barriers.
-
-4. **Presentation**:
-
-- **Swap Chains**: Create and manage swap chains to present the rendered images to the screen.
-- **Presentation**: Submit the rendered images to the swap chains for presentation.
-</details>
-
-#### Initialization
-Vulkan interacts with the GPU through Physical Devices and Queue Families. A Physical Device represents a GPU on your machine, while Queue Families categorize the operations (e.g., graphics, compute) that queues in this family can execute. Queues are created from Queue Families and are interfaces to the GPU, allowing commands to be sent for execution.
-
-#### Vulkan Surface and Swap Chain
-Vulkan interacts with the window system via a surface, while a Swap Chain organizes the image buffers to be displayed.
-- The Swap Chain holds a series of images where each image represents a "frame" that can be rendered to. It efficiently handles the swapping of the image being displayed on the screen with the next image to be rendered.
-- Image Views represent a specific view into an image, allowing an image to be used with a specific part of the Vulkan pipeline.
-
-#### Render Pass and Pipeline
-The Graphics Pipeline is a series of stages that process data sequentially to render an image to the screen. It encompasses several stages, including vertex shading, fragment shading, and fixed-function stages for various processing (e.g., tessellation, geometry shading).
-
-#### Buffer and Memory Management
 1. Vertex Buffers store vertex data, while Uniform Buffers store data that remains consistent across a single render pass.
 2. Staging Buffers are used as temporary buffers to transfer data to GPU-accessible buffers efficiently.
 3. Depth Buffers store depth information to handle overlapping objects correctly.
 4. Command Buffers store commands that will be submitted to the GPU.
 5. Framebuffers are collections of memory attachments (e.g., color, depth, stencil attachments) where the output of rendering commands is stored.
+
+- **Graphic and Compute Pipelines**: Configure the pipelines to define the graphic and compute processing to be conducted.
+
+The Graphics Pipeline is a series of stages that process data sequentially to render an image to the screen. It encompasses several stages, including vertex shading, fragment shading, and fixed-function stages for various processing (e.g., tessellation, geometry shading).
+
+</details>
+<details>
+<summary>Rendering</summary>
+- **Command Buffers**: Record commands into command buffers. These commands include operations such as drawing, memory copying, etc.
+- **Command Pools**: Manage command pools to allocate and free command buffers.
+- **Submission and Synchronization**: Submit the command buffers to the GPU queues for execution, and synchronize the execution between the CPU and the GPU using semaphores and barriers.
+</details>
+<details>
+<summary>Presentation</summary>
+Vulkan interacts with the window system via a surface, while a Swap Chain organizes the image buffers to be displayed.
+- The Swap Chain holds a series of images where each image represents a "frame" that can be rendered to. It efficiently handles the swapping of the image being displayed on the screen with the next image to be rendered.
+- Image Views represent a specific view into an image, allowing an image to be used with a specific part of the Vulkan pipeline.
+
+- **Swap Chains**: Create and manage swap chains to present the rendered images to the screen.
+- **Presentation**: Submit the rendered images to the swap chains for presentation.
+</details>
 
 ## BMP Texture Loader
 The BMP loader is a critical component for rendering textures on the model. The provided code showcases a C++ implementation of a simple BMP file loader, which reads the BMP file, extracts necessary header information, and processes pixel data for further usage in Vulkan.\
