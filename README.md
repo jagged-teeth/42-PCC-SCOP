@@ -18,6 +18,7 @@ This project explores basic GPU rendering through Vulkan, rendering a textured m
 Ensure the following packages are installed on your Linux machine:
 
 - Vulkan SDK
+- GLM
 - GLFW Library
 - GLSL Shader Compiler (if you want to mess with the shaders)
 
