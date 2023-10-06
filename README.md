@@ -59,14 +59,11 @@ Vulkan interacts with the GPU through Physical Devices and Queue Families. A Phy
 - **Memory**: Allocate and manage memory for graphic resources.
 - **Buffers and Images**: Create buffers and images to store graphic data. Image Views represent a specific view into an image, allowing an image to be used with a specific part of the Vulkan pipeline.
 
-<details>
-<summary>Buffers explained</summary>
+**Buffers explained**
 1. Vertex Buffers store vertex data, while Uniform Buffers store data that remains consistent across a single render pass.
 2. Staging Buffers are used as temporary buffers to transfer data to GPU-accessible buffers efficiently.
 3. Depth Buffers store depth information to handle overlapping objects correctly.
-4. Command Buffers store commands that will be submitted to the GPU.
-5. Framebuffers are collections of memory attachments (e.g., color, depth, stencil attachments) where the output of rendering commands is stored.
-</details>
+4. Framebuffers are collections of memory attachments (e.g., color, depth, stencil attachments) where the output of rendering commands is stored.
 
 - **Graphic and Compute Pipelines**: Configure the pipelines to define the graphic and compute processing to be conducted.
 
