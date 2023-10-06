@@ -55,6 +55,7 @@ Vulkan interacts with the GPU through Physical Devices and Queue Families. A Phy
 </details>
 <details>
 <summary>Resource Creation</summary>
+
 - **Memory**: Allocate and manage memory for graphic resources.
 - **Buffers and Images**: Create buffers and images to store graphic data.
 
@@ -71,12 +72,14 @@ The Graphics Pipeline is a series of stages that process data sequentially to re
 </details>
 <details>
 <summary>Rendering</summary>
+
 - **Command Buffers**: Record commands into command buffers. These commands include operations such as drawing, memory copying, etc.
 - **Command Pools**: Manage command pools to allocate and free command buffers.
 - **Submission and Synchronization**: Submit the command buffers to the GPU queues for execution, and synchronize the execution between the CPU and the GPU using semaphores and barriers.
 </details>
 <details>
 <summary>Presentation</summary>
+
 Vulkan interacts with the window system via a surface, while a Swap Chain organizes the image buffers to be displayed.
 - The Swap Chain holds a series of images where each image represents a "frame" that can be rendered to. It efficiently handles the swapping of the image being displayed on the screen with the next image to be rendered.
 - Image Views represent a specific view into an image, allowing an image to be used with a specific part of the Vulkan pipeline.
