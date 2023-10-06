@@ -57,13 +57,16 @@ Vulkan interacts with the GPU through Physical Devices and Queue Families. A Phy
 <summary>Resource Creation</summary>
 
 - **Memory**: Allocate and manage memory for graphic resources.
-- **Buffers and Images**: Create buffers and images to store graphic data.
+- **Buffers and Images**: Create buffers and images to store graphic data. Image Views represent a specific view into an image, allowing an image to be used with a specific part of the Vulkan pipeline.
 
+<details>
+<summary>Buffers explained</summary>
 1. Vertex Buffers store vertex data, while Uniform Buffers store data that remains consistent across a single render pass.
 2. Staging Buffers are used as temporary buffers to transfer data to GPU-accessible buffers efficiently.
 3. Depth Buffers store depth information to handle overlapping objects correctly.
 4. Command Buffers store commands that will be submitted to the GPU.
 5. Framebuffers are collections of memory attachments (e.g., color, depth, stencil attachments) where the output of rendering commands is stored.
+</details>
 
 - **Graphic and Compute Pipelines**: Configure the pipelines to define the graphic and compute processing to be conducted.
 
@@ -81,10 +84,8 @@ The Graphics Pipeline is a series of stages that process data sequentially to re
 <summary>Presentation</summary>
 
 Vulkan interacts with the window system via a surface, while a Swap Chain organizes the image buffers to be displayed.
-- The Swap Chain holds a series of images where each image represents a "frame" that can be rendered to. It efficiently handles the swapping of the image being displayed on the screen with the next image to be rendered.
-- Image Views represent a specific view into an image, allowing an image to be used with a specific part of the Vulkan pipeline.
 
-- **Swap Chains**: Create and manage swap chains to present the rendered images to the screen.
+- **Swap Chains**: Create and manage swap chains to present the rendered images to the screen. The Swap Chain holds a series of images where each image represents a "frame" that can be rendered to. It efficiently handles the swapping of the image being displayed on the screen with the next image to be rendered.
 - **Presentation**: Submit the rendered images to the swap chains for presentation.
 </details>
 
