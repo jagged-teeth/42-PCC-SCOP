@@ -41,6 +41,34 @@ make
 ## Vulkan Concepts
 Vulkan is a low-overhead, cross-platform 3D graphics and computing API. This project followed the "Hello Triangle" tutorial, extending the concepts learned to render a textured 3D model.
 
+<details>
+<summary> The chain of command explained </summary>
+
+1. **Initialization**:
+
+- **Vulkan Instance**: Create a Vulkan instance which represents a connection between your application and the Vulkan library.
+- **Validation Layers**: Configure the validation layers that assist in debugging by verifying the API calls to ensure they adhere to the Vulkan specifications.
+- **Extensions**: Load the necessary extensions to access specific functionalities.
+- **Physical and Logical Devices**: Identify and select the GPU devices on which your application will run, and create a logical device to interact with them.
+
+2. **Resource Creation**:
+
+- **Memory**: Allocate and manage memory for graphic resources.
+- **Buffers and Images**: Create buffers and images to store graphic data.
+- **Graphic and Compute Pipelines**: Configure the pipelines to define the graphic and compute processing to be conducted.
+
+3. **Rendering**:
+
+- **Command Buffers**: Record commands into command buffers. These commands include operations such as drawing, memory copying, etc.
+- **Command Pools**: Manage command pools to allocate and free command buffers.
+- **Submission and Synchronization**: Submit the command buffers to the GPU queues for execution, and synchronize the execution between the CPU and the GPU using semaphores and barriers.
+
+4. **Presentation**:
+
+- **Swap Chains**: Create and manage swap chains to present the rendered images to the screen.
+- **Presentation**: Submit the rendered images to the swap chains for presentation.
+</details>
+
 #### Initialization
 Vulkan interacts with the GPU through Physical Devices and Queue Families. A Physical Device represents a GPU on your machine, while Queue Families categorize the operations (e.g., graphics, compute) that queues in this family can execute. Queues are created from Queue Families and are interfaces to the GPU, allowing commands to be sent for execution.
 
