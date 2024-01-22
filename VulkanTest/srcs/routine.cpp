@@ -25,7 +25,11 @@ void Scop::initVulkan() {
 	createImageViews();
 	createRenderPass();
 	createDescriptorSetLayout();
-	createGraphicsPipeline();
+	VkPipeline pipeline1 = createGraphicsPipeline("shaders/vert.spv", "shaders/frag.spv");
+	VkPipeline pipeline2 = createGraphicsPipeline("shaders/vert2.spv", "shaders/frag2.spv");
+
+	graphicsPipelines.push_back(pipeline1);
+	graphicsPipelines.push_back(pipeline2);
 	createCommandPool();
 	createDepthResources();
 	createFramebuffers();
@@ -46,12 +50,19 @@ void Scop::mainLoop() {
 	float angle = 0.0f;
 	float verticalAngle = 0.0f;
 	const float rotationSpeed = 0.05f;
+	bool rKeyPressedLastFrame = false;
 
 	while (!glfwWindowShouldClose(window)) {
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 		glfwPollEvents();
+
+		bool rKeyPressedNow = glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS;
+		if (rKeyPressedNow && !rKeyPressedLastFrame) {
+			currentPipelineIndex = (currentPipelineIndex == 0) ? 1 : 0;
+		}
+		rKeyPressedLastFrame = rKeyPressedNow;
 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			modelScale += scaleFactor;
@@ -163,7 +174,8 @@ void Scop::cleanup() {
 	vkFreeMemory(device, vertexBufferMemory, nullptr);
 	vkDestroyBuffer(device, indexBuffer, nullptr);
 	vkFreeMemory(device, indexBufferMemory, nullptr);
-	vkDestroyPipeline(device, graphicsPipeline, nullptr);
+	for (auto pipeline : graphicsPipelines)
+		vkDestroyPipeline(device, pipeline, nullptr);
 	vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
 	vkDestroyRenderPass(device, renderPass, nullptr);
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {

@@ -47,7 +47,8 @@ private:
 	VkRenderPass renderPass;
 	VkDescriptorSetLayout descriptorSetLayout;
 	VkPipelineLayout pipelineLayout;
-	VkPipeline graphicsPipeline;
+	std::vector<VkPipeline> graphicsPipelines;
+	size_t currentPipelineIndex = 0;
 
 	VkCommandPool commandPool;
 
@@ -131,7 +132,7 @@ private:
 					 VkDeviceMemory &imageMemory);
 	void createImageViews();
 	void createRenderPass();
-	void createGraphicsPipeline();
+	VkPipeline createGraphicsPipeline(const std::string& vertShaderPath, const std::string& fragShaderPath);
 	void createFramebuffers();
 
 	void createCommandPool();

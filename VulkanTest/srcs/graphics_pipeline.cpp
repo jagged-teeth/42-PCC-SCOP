@@ -1,8 +1,8 @@
 #include "scop.hpp"
 
-void Scop::createGraphicsPipeline() {
-	auto vertShaderCode = readFile("shaders/vert.spv");
-	auto fragShaderCode = readFile("shaders/frag.spv");
+VkPipeline Scop::createGraphicsPipeline(const std::string& vertShaderPath, const std::string& fragShaderPath) {
+	auto vertShaderCode = readFile(vertShaderPath);
+	auto fragShaderCode = readFile(fragShaderPath);
 
 	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
 	VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -115,6 +115,8 @@ void Scop::createGraphicsPipeline() {
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 	// pipelineInfo.basePipelineIndex = -1;
+
+	VkPipeline graphicsPipeline;
 	if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr,
 								  &graphicsPipeline) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create graphics pipeline!");
@@ -122,6 +124,8 @@ void Scop::createGraphicsPipeline() {
 
 	vkDestroyShaderModule(device, fragShaderModule, nullptr);
 	vkDestroyShaderModule(device, vertShaderModule, nullptr);
+
+	return graphicsPipeline;
 }
 
 VkShaderModule Scop::createShaderModule(const std::vector<char> &node) {
