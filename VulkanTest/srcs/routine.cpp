@@ -44,6 +44,7 @@ void Scop::initVulkan() {
 
 void Scop::mainLoop() {
 	float angle = 0.0f;
+	float verticalAngle = 0.0f;
 	const float rotationSpeed = 0.05f;
 
 	while (!glfwWindowShouldClose(window)) {
@@ -52,10 +53,15 @@ void Scop::mainLoop() {
 		lastFrame = currentFrame;
 		glfwPollEvents();
 
-		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			modelScale += scaleFactor;
-		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 			modelScale -= scaleFactor;
+
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+			verticalAngle += rotationSpeed;
+		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+			verticalAngle -= rotationSpeed;
 
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 			angle += rotationSpeed;
@@ -64,6 +70,9 @@ void Scop::mainLoop() {
 
 		cameraPos.x = cos(angle) * 5.0f;
 		cameraPos.z = sin(angle) * 5.0f;
+
+		cameraPos.y = sin(verticalAngle) * 5.0f;
+		cameraPos.z = cos(verticalAngle) * 5.0f;
 
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
