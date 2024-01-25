@@ -36,8 +36,9 @@ make
 # don't include paths, for example to load the teapot like presented on the gif use :
 # ./scop teapot.obj sample2.bmp
 ```
-- `Up Arrow` and `Down Arrow` for the zoom functions.
-- `Left Arrow` and `Right Arrow` to rotate around the object.
+- `W` and `S` for the zoom functions.
+- `Left Arrow`, `Right Arrow`, `Up Arrow` and `Down Arrow` to rotate around the object.
+- `ESC` to exit  the program.
 
 ## Vulkan Concepts
 Vulkan is a low-overhead, cross-platform 3D graphics and computing API. This project followed the "Hello Triangle" tutorial, extending the concepts learned to render a textured 3D model.
