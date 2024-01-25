@@ -132,6 +132,7 @@ private:
 					 VkDeviceMemory &imageMemory);
 	void createImageViews();
 	void createRenderPass();
+	void createPipelineLayout();
 	VkPipeline createGraphicsPipeline(const std::string& vertShaderPath, const std::string& fragShaderPath);
 	void createFramebuffers();
 

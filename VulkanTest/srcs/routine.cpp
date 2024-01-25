@@ -25,9 +25,9 @@ void Scop::initVulkan() {
 	createImageViews();
 	createRenderPass();
 	createDescriptorSetLayout();
+	createPipelineLayout();
 	VkPipeline pipeline1 = createGraphicsPipeline("shaders/vert.spv", "shaders/frag.spv");
 	VkPipeline pipeline2 = createGraphicsPipeline("shaders/vert2.spv", "shaders/frag2.spv");
-
 	graphicsPipelines.push_back(pipeline1);
 	graphicsPipelines.push_back(pipeline2);
 	createCommandPool();
