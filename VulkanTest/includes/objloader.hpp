@@ -2,13 +2,14 @@
 
 #include <cstring>
 #include <fstream>
+#include "glmd.hpp"
 #include <glm/glm.hpp>
 #include <iostream>
 #include <vector>
 
-bool loadObj(const char *filepath, std::vector<glm::vec3> &out_vertices) {
+bool loadObj(const char *filepath, std::vector<Vec3> &out_vertices) {
 	std::vector<unsigned int> vertex_indices;
-	std::vector<glm::vec3> temp_vertices;
+	std::vector<Vec3> temp_vertices;
 
 	FILE *file = fopen(filepath, "r");
 
@@ -23,7 +24,7 @@ bool loadObj(const char *filepath, std::vector<glm::vec3> &out_vertices) {
 		if (res == EOF)
 			break;
 		if (strcmp(lineHeader, "v") == 0) {
-			glm::vec3 vertex;
+			Vec3 vertex;
 			if (fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z) != 3) {
 				std::cout << "Error while reading vertices data\n";
 				return false;

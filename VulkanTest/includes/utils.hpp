@@ -5,6 +5,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include <GLFW/glfw3.h>
+#include "glmd.hpp"
 #include <algorithm>
 #include <array>
 #include <chrono>
@@ -45,9 +46,9 @@ struct SwapChainSupportDetails {
 };
 
 struct Vertex {
-	glm::vec3 pos;
-	glm::vec3 color;
-	glm::vec2 texCoord;
+	Vec3 pos;
+	Vec3 color;
+	Vec2 texCoord;
 
 	static VkVertexInputBindingDescription getBindingDescription() {
 		VkVertexInputBindingDescription bindingDescription{};
@@ -86,8 +87,8 @@ struct Vertex {
 namespace std {
 template <> struct hash<Vertex> {
 	size_t operator()(Vertex const &vertex) const {
-		return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
-			   (hash<glm::vec2>()(vertex.texCoord) << 1);
+		return ((hash<Vec3>()(vertex.pos) ^ (hash<Vec3>()(vertex.color) << 1)) >> 1) ^
+			   (hash<Vec2>()(vertex.texCoord) << 1);
 	}
 };
 } // namespace std
