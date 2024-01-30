@@ -18,7 +18,7 @@ This project explores basic GPU rendering through Vulkan, rendering a textured m
 Ensure the following packages are installed on your Linux machine:
 
 - Vulkan SDK
-- GLM
+- ~~GLM~~ Implemented custom classes and functions for matrices and vectors operations.
 - GLFW Library
 - GLSL Shader Compiler (if you want to mess with the shaders)
 
@@ -118,7 +118,7 @@ The OBJ loader is responsible for reading the geometry data from an OBJ file and
 ### Loading the OBJ in Vulkan
 I call the `loadObj` function to load the vertex data from the OBJ file into `temp_vertices`. Following this, I calculate the center of mass of the model to reposition the vertices around the center, which ensures a balanced distribution of vertices around the origin, aiding in a better rendering and manipulation of the model.
 ```cpp
-std::vector<glm::vec3> temp_vertices;
+std::vector<Vec3> temp_vertices;
 
 if (!loadObj(MODEL_PATH, temp_vertices)) {
 	throw std::runtime_error("failed to load model!");
