@@ -47,6 +47,9 @@ void Scop::initVulkan() {
 }
 
 void Scop::mainLoop() {
+	const float maxVangle = radians(87.0f);
+	const float minVangle = radians(-87.0f);
+
 	float angle = 0.0f;
 	float verticalAngle = 0.0f;
 	const float rotationSpeed = 0.05f;
@@ -79,16 +82,17 @@ void Scop::mainLoop() {
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 			angle -= rotationSpeed;
 
-		cameraPos.x = cos(angle) * 5.0f;
-		cameraPos.z = sin(angle) * 5.0f;
-
-		cameraPos.y = sin(verticalAngle) * 5.0f;
-		cameraPos.z = cos(verticalAngle) * 5.0f;
+		float radius = 5.0f;
+		cameraPos.x = cos(verticalAngle) * sin(angle) * radius;
+		cameraPos.y = sin(verticalAngle) * radius;
+		cameraPos.z = cos(verticalAngle) * cos(angle) * radius;
 
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			glfwSetWindowShouldClose(window, GLFW_TRUE);
 		}
-		modelScale = glm::clamp(modelScale, 0.01f, 1.0f);
+
+		verticalAngle = clamp(verticalAngle, minVangle, maxVangle);
+		modelScale = clamp(modelScale, 0.01f, 1.0f);
 		drawFrame();
 	}
 

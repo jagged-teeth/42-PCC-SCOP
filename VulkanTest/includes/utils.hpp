@@ -94,10 +94,16 @@ template <> struct hash<Vertex> {
 } // namespace std
 
 struct UniformBufferObject {
-	alignas(16) glm::mat4 model;
-	alignas(16) glm::mat4 view;
-	alignas(16) glm::mat4 proj;
+	alignas(16) Mat4 model;
+	alignas(16) Mat4 view;
+	alignas(16) Mat4 proj;
 };
+
+//struct UniformBufferObject2 {
+//	alignas(16) glm::mat4 model;
+//	alignas(16) glm::mat4 view;
+//	alignas(16) glm::mat4 proj;
+//};
 
 static std::vector<char> readFile(const std::string &filename) {
 	std::ifstream file(filename, std::ios::ate | std::ios::binary);
@@ -132,6 +138,14 @@ inline void DestroyDebugUtilsMessengerEXT(VkInstance instance,
 		instance, "vkDestroyDebugUtilsMessengerEXT");
 	if (func != nullptr)
 		func(instance, debugMessenger, pAllocator);
+}
+
+inline float clamp(float value, float min, float max) {
+	if (value < min)
+		return min;
+	if (value > max)
+		return max;
+	return value;
 }
 
 // const std::vector<Vertex> vertices = {{{-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},

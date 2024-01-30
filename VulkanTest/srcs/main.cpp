@@ -1,6 +1,7 @@
 #include "scop.hpp"
 
 int main(int argc, char **argv) {
+	//compareMatrices();
 	if (argc != 3) {
 		std::cerr << "Usage: " << argv[0] << " <model> <texture>" << std::endl;
 		return EXIT_FAILURE;
