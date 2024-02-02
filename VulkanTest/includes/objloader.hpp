@@ -2,10 +2,9 @@
 
 #include <cstring>
 #include <fstream>
-#include "glmd.hpp"
-#include <glm/glm.hpp>
 #include <iostream>
 #include <vector>
+#include "glmd.hpp"
 
 bool loadObj(const char *filepath, std::vector<Vec3> &out_vertices) {
 	std::vector<unsigned int> vertex_indices;

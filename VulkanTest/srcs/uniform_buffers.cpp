@@ -53,6 +53,9 @@ void Scop::updateUniformBuffer(uint32_t currentImage) {
 	ubo.model =
 		Mat4::rotate(Mat4(1.0f), time * radians(90.0f), Vec3(0.0f, 1.0f, 0.0f));
 
+	// Apply Roll
+	ubo.model = Mat4::rotate(ubo.model, rollAngle, Vec3(0.0f, 0.0f, 1.0f));
+
 	// Adjust model scale
 	ubo.model = Mat4::scale(ubo.model, Vec3(modelScale, modelScale, modelScale));
 

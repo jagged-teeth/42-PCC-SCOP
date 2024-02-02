@@ -4,8 +4,13 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_ENABLE_EXPERIMENTAL
 
-#include <GLFW/glfw3.h>
+//#include <glm/glm.hpp>
+//#include <glm/gtc/matrix_transform.hpp>
+//#include <glm/gtc/type_ptr.hpp>
+//#include <glm/gtx/hash.hpp>
+
 #include "glmd.hpp"
+#include <GLFW/glfw3.h>
 #include <algorithm>
 #include <array>
 #include <chrono>
@@ -13,10 +18,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/hash.hpp>
 #include <iostream>
 #include <limits>
 #include <optional>

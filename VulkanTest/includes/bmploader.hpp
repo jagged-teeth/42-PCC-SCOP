@@ -51,45 +51,34 @@ struct BMP {
 		std::ifstream input{filepath, std::ios_base::binary};
 		if (input) {
 			input.read((char *)&file_header, sizeof(file_header));
-
 			if (file_header.file_type != 0x4D42) {
 				throw std::runtime_error("Error! Unrecognized file format.");
 			}
 
 			input.read((char *)&info_header, sizeof(info_header));
 
-			// The BMPColorHeader is used only for transparent images
 			if (info_header.bit_count == 32) {
 				if (info_header.size >= (sizeof(BMPInfoHeader) + sizeof(BMPColorHeader))) {
 					input.read((char *)&color_header, sizeof(color_header));
 					check_color_header(color_header);
 				} else {
-					std::cerr << "Warning! The file \"" << filepath
-							  << "\" does not seem to contain a color header!\n";
+					std::cerr << "Warning! The file \"" << filepath << "\" does not seem to contain a color header!\n";
 					throw std::runtime_error("Error! Unrecognized file format.");
 				}
+			} else {
+				throw std::runtime_error("Error! Only 32-bit images are supported.");
 			}
 
 			// Jump to the pixel data location
 			input.seekg(file_header.offset, input.beg);
-
-			// Adjust the header fields for output
-			if (info_header.bit_count == 32) {
-				info_header.size = sizeof(BMPInfoHeader) + sizeof(BMPColorHeader);
-				file_header.offset =
-					sizeof(BMPFileHeader) + sizeof(BMPInfoHeader) + sizeof(BMPColorHeader);
-			} else {
-				info_header.size = sizeof(BMPInfoHeader);
-				file_header.offset = sizeof(BMPFileHeader) + sizeof(BMPInfoHeader);
-			}
-			file_header.file_size = file_header.offset;
-
-			if (info_header.height < 0) {
-				throw std::runtime_error("Error! The program can only treat BMP images with the "
-										 "origin in the bottom left corner!");
-			}
-
 			data.resize(info_header.width * info_header.height * info_header.bit_count / 8);
+
+			input.read((char *)data.data(), data.size());
+			if (info_header.bit_count == 32) {
+				for (size_t i = 0; i < data.size(); i += 4) {
+					std::swap(data[i], data[i + 2]); // Swap to RGBA
+				}
+			}
 
 			// Check if the row padding is multiple of 4
 			if (info_header.width % 4 == 0) {

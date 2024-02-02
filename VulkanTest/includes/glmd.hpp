@@ -125,4 +125,6 @@ public:
 	const float* operator[](int index) const;
 };
 
+Vec3 operator*(const Mat4& mat, const Vec3& vec);
+
 #endif

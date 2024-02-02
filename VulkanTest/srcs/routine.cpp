@@ -72,15 +72,22 @@ void Scop::mainLoop() {
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 			modelScale -= scaleFactor;
 
+		// Yaw
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 			verticalAngle += rotationSpeed;
 		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 			verticalAngle -= rotationSpeed;
-
+		// Pitch
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 			angle += rotationSpeed;
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 			angle -= rotationSpeed;
+
+		// Roll
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			rollAngle += rotationSpeed;
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+			rollAngle -= rotationSpeed;
 
 		float radius = 5.0f;
 		cameraPos.x = cos(verticalAngle) * sin(angle) * radius;

@@ -99,9 +99,9 @@ private:
 
 	const float scaleFactor = 0.01f;
 	float modelScale = 0.01f;
-	//float modelScale = 1.0f;
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
+	float rollAngle = 0.0f;
 
 	void initWindow();
 	void initVulkan();

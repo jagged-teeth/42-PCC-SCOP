@@ -16,12 +16,12 @@ COLOR_COMPILE = \033[1;34m
 COLOR_LINK = \033[1;32m
 COLOR_REMOVE = \033[1;31m
 
-$(OBJDIR)/%.o: srcs/%.cpp
+$(OBJDIR)/%.o: srcs/%.cpp $(INCS)
 	@mkdir -p $(dir $@)
 	@printf '$(COLOR_COMPILE)Compiling$(COLOR_RESET) %s\n' $<
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(OBJS) $(INCS)
+$(NAME): $(OBJS)
 	@printf '$(COLOR_LINK)Linking objs...$(COLOR_RESET)\n'
 	@$(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
 	@printf '$(COLOR_LINK)Finished linking √$(COLOR_RESET)\n'

@@ -2,17 +2,17 @@
 #include "scop.hpp"
 
 void Scop::createTextureImage() {
-	 int texWidth, texHeight;
+	int texWidth, texHeight;
 
-	 BMP my_loader = BMP(TEXTURE_PATH);
+	BMP my_loader = BMP(TEXTURE_PATH);
 
-	 texWidth = my_loader.info_header.width;
-	 texHeight = my_loader.info_header.height;
-	 VkDeviceSize imageSize = texWidth * texHeight * 4;
+	texWidth = my_loader.info_header.width;
+	texHeight = my_loader.info_header.height;
+	VkDeviceSize imageSize = texWidth * texHeight * 4;
 
-	 if (my_loader.data.empty()) {
+	if (my_loader.data.empty()) {
 		throw std::runtime_error("Error! Unable to load texture image!");
-	 }
+	}
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
