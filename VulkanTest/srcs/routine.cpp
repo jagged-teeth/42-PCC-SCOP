@@ -28,8 +28,10 @@ void Scop::initVulkan() {
 	createPipelineLayout();
 	VkPipeline pipeline1 = createGraphicsPipeline("shaders/vert.spv", "shaders/frag.spv");
 	VkPipeline pipeline2 = createGraphicsPipeline("shaders/vert2.spv", "shaders/frag2.spv");
+	VkPipeline pipeline3 = createGraphicsPipeline("shaders/vert3.spv", "shaders/frag3.spv");
 	graphicsPipelines.push_back(pipeline1);
 	graphicsPipelines.push_back(pipeline2);
+	graphicsPipelines.push_back(pipeline3);
 	createCommandPool();
 	createDepthResources();
 	createFramebuffers();
@@ -63,7 +65,7 @@ void Scop::mainLoop() {
 
 		bool rKeyPressedNow = glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS;
 		if (rKeyPressedNow && !rKeyPressedLastFrame) {
-			currentPipelineIndex = (currentPipelineIndex == 0) ? 1 : 0;
+			currentPipelineIndex = (currentPipelineIndex + 1) % 3;
 		}
 		rKeyPressedLastFrame = rKeyPressedNow;
 

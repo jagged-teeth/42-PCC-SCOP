@@ -1,5 +1,5 @@
-/usr/local/bin/glslc shader.vert -o vert2.spv
-/usr/local/bin/glslc shader.frag -o frag2.spv
+/usr/local/bin/glslc shader.vert -o vert3.spv
+/usr/local/bin/glslc shader.frag -o frag3.spv
 
 # spirv-dis vert.spv -o vert.spvasm (disassembler)
 # spirv-dis frag.spv -o frag.spvasm (disassembler)
